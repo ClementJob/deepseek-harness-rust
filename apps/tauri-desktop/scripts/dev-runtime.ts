@@ -74,9 +74,10 @@ export function prepareDevelopmentResources(options: DevelopmentResourcesOptions
   linkDirectory(join(options.repositoryRoot, 'node_modules', 'pnpm'), join(runtimeRoot, 'pnpm'))
   // The desktop Office plugin rejects activation without these skill assets;
   // the full Python payload only matters when its tool runs.
+  // The Host resolves the office assets beside the primary runtime, not inside it.
   linkDirectory(
     join(options.repositoryRoot, 'packages', 'skill', 'skill-office', 'assets'),
-    join(runtimeRoot, 'primary-runtime', 'office-skills'),
+    join(runtimeRoot, 'office-skills'),
   )
   const home = join(options.resources, 'home')
   initProfile(join(home, 'profiles', 'desktop'), resolveWebBundles())

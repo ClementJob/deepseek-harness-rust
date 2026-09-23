@@ -65,7 +65,7 @@ pnpm --dir apps/tauri-desktop run start        # skip the workspace build
 
 - `dsh/` — the runtime project whose `node_modules` links the built CLI (`@deepseek-ai/dsh`), the Desktop Host, and their `workspace:` dependencies, with a hoisted-linker pnpm workspace file, so the Host entry at `node_modules/@deepseek-ai/dsh-desktop-host/lib/index.js` resolves.
 - `runtime/bin/node` — the launcher's own Node executable, the process the shell spawns.
-- `runtime/pnpm` + `runtime/primary-runtime/office-skills` — the package-manager entry and the Office skill assets the desktop Office plugin requires.
+- `runtime/pnpm` + `runtime/office-skills` — the package-manager entry and the Office skill assets the desktop Office plugin requires beside the primary runtime.
 - `home/` — a development Harness home; its `profiles/desktop` profile is initialized with the shared Web bundle template and never overwritten afterwards.
 
 The launcher then builds the shell (`cargo build`) and start it with `DSH_TAURI_RESOURCES` and `DSH_HOME` pointing at the prepared tree. Debug builds (`cfg(debug_assertions)`) read those overrides; packaged builds resolve `resources/` next to the executable, honor the user's real `DSH_HOME`, and derive node, pnpm and primary-runtime paths the same way the Electron shell derived them from `process.resourcesPath`.
@@ -83,7 +83,7 @@ pnpm run build:desktop
 - `resources/dsh/` — the runtime project whose `node_modules` resolves the Host entry. Every workspace package in the CLI's and Desktop Host's runtime dependency closure is copied as a real, link-resolved directory — development uses junctions, packaging must never ship a reparse point that points back at the build host. External dependencies are placed once beside the packages they serve; a dependency name claimed by two versions nests beneath the consuming package.
 - `resources/runtime/bin/node(.exe)` — the build host's Node executable, the process the shell spawns.
 - `resources/runtime/pnpm/` — the workspace's pinned pnpm package, providing `bin/pnpm.mjs`.
-- `resources/runtime/primary-runtime/office-skills/` — the Office skill assets the desktop Office plugin requires.
+- `resources/runtime/office-skills/` — the Office skill assets the desktop Office plugin requires.
 
 `tauri.conf.json` maps that tree onto the executable's `resources/` directory (`bundle.resources`), which is exactly where `main.rs` resolves node, the pnpm entry, and the primary runtime in packaged builds.
 

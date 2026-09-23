@@ -65,7 +65,7 @@ pnpm --dir apps/tauri-desktop run start        # skip the workspace build
 
 - `dsh/` — 运行时项目，其 `node_modules` 链接构建出的 CLI（`@deepseek-ai/dsh`）、Desktop Host 及其 `workspace:` 依赖，带 hoisted-linker pnpm workspace 文件，使 Host 入口 `node_modules/@deepseek-ai/dsh-desktop-host/lib/index.js` 可解析。
 - `runtime/bin/node` — 启动器自己的 Node 可执行文件，即壳启动的进程。
-- `runtime/pnpm` + `runtime/primary-runtime/office-skills` — 桌面 Office 插件所需的包管理器入口与 Office 技能资产。
+- `runtime/pnpm` + `runtime/office-skills` — 桌面 Office 插件所需的包管理器入口与 Office 技能资产，置于主运行时旁边。
 - `home/` — 开发用 Harness home；其 `profiles/desktop` profile 以共享 Web bundle 模板初始化，之后不再覆写。
 
 启动器随后构建壳（`cargo build`），以指向准备好的树的 `DSH_TAURI_RESOURCES` 与 `DSH_HOME` 启动它。Debug 构建（`cfg(debug_assertions)`）读取这些覆盖；打包构建解析可执行文件旁的 `resources/`，尊重用户真实的 `DSH_HOME`，并以 Electron 壳从 `process.resourcesPath` 推导 node、pnpm 与 primary-runtime 路径的同样方式推导。
@@ -83,7 +83,7 @@ pnpm run build:desktop
 - `resources/dsh/` — 运行时项目，其 `node_modules` 解析 Host 入口。CLI 与 Desktop Host 运行时依赖闭包中的每个 workspace 包都以真实、解析过链接的目录复制——开发用 junction，打包绝不能携带指回构建机的 reparse point。外部依赖放置在其服务对象的公共上级一次；同一名点被两个版本占用的依赖则嵌套在使用方包内。
 - `resources/runtime/bin/node(.exe)` — 构建机的 Node 可执行文件，即壳启动的进程。
 - `resources/runtime/pnpm/` — 工作区固定版本的 pnpm 包，提供 `bin/pnpm.mjs`。
-- `resources/runtime/primary-runtime/office-skills/` — 桌面 Office 插件所需的 Office 技能资产。
+- `resources/runtime/office-skills/` — 桌面 Office 插件所需的 Office 技能资产。
 
 `tauri.conf.json` 以 `bundle.resources` 把该树映射到可执行文件旁的 `resources/` 目录，正是打包构建中 `main.rs` 解析 node、pnpm 入口与 primary runtime 的位置。
 

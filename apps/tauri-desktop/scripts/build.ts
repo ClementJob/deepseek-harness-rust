@@ -30,6 +30,10 @@ const TAURI_CONFIG_PATH = join(APP_ROOT, 'src-tauri', 'tauri.conf.json')
 const REQUIRED_ARTIFACTS = [
   join(CLI_DIR, 'lib'),
   join(HOST_DIR, 'lib', 'index.js'),
+  // The Host activates profile plugins from these faces; a partial build:lib
+  // otherwise surfaces as dozens of plugin import failures at first launch.
+  join(REPOSITORY_ROOT, 'packages', 'typert', 'registry', 'lib', 'index.js'),
+  join(REPOSITORY_ROOT, 'packages', 'client', 'ui-theme', 'lib', 'index.js'),
 ]
 
 interface PackageManifest {
@@ -202,7 +206,13 @@ function placePackage(sourceRealDir: string, destinationDir: string, placedRealD
   const siblingsDir = basename(candidateSiblings) === 'node_modules' ? candidateSiblings : join(sourceRealDir, 'node_modules')
   const optionalNames = new Set(Object.keys(manifest.optionalDependencies ?? {}))
   const peerNames = new Set(Object.keys(manifest.peerDependencies ?? {}))
-  for (const [name] of [...Object.entries(manifest.dependencies ?? {}), ...Object.entries(manifest.peerDependencies ?? {})]) {
+  // Optional edges carry the native addon platform bindings; a package present
+  // in the installing layout must ship, a platform-gated absence stays legal.
+  for (const [name] of [
+    ...Object.entries(manifest.dependencies ?? {}),
+    ...Object.entries(manifest.peerDependencies ?? {}),
+    ...Object.entries(manifest.optionalDependencies ?? {}),
+  ]) {
     const candidate = join(siblingsDir, ...name.split('/'))
     if (!existsSync(candidate)) {
       // Optional and peer dependencies may legitimately be absent (platform-gated
@@ -268,7 +278,7 @@ function prepareResources(): void {
   if (process.platform !== 'win32') chmodSync(nodeExecutable, 0o755)
 
   copyResolvedTree(realpathSync(PNPM_PACKAGE_DIR), join(RUNTIME_ROOT, 'pnpm'), new Set())
-  copyResolvedTree(realpathSync(OFFICE_SKILLS_DIR), join(RUNTIME_ROOT, 'primary-runtime', 'office-skills'), new Set())
+  copyResolvedTree(realpathSync(OFFICE_SKILLS_DIR), join(RUNTIME_ROOT, 'office-skills'), new Set())
 }
 
 /**
