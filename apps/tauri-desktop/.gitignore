@@ -1,0 +1,3 @@
+target/
+.tauri-build/
+development-test/
