@@ -14,7 +14,6 @@
     "types": ["node"]
   },
   "include": [
-    "apps/desktop/tests/**/*.client.spec.tsx",
     // Source-subpath test imports can arrive through workspace links whose
     // realpath semantics vary by host. Load package CSS declarations directly.
     "packages/client/*/src/css-modules.d.ts",
@@ -43,7 +42,6 @@
     "packages/client/*/tests/**/*.host.spec.ts"
   ],
   "references": [
-    { "path": "./apps/desktop/tsconfig.client.json" },
     { "path": "./packages/experimental/client-ui-voice-input" },
 
     { "path": "./packages/client/ui-sidebar-terminal" },
