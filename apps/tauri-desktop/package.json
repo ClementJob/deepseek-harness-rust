@@ -8,10 +8,12 @@
   "scripts": {
     "dev": "tsx scripts/dev.ts",
     "start": "tsx scripts/dev.ts --skip-build",
+    "build": "tsx scripts/build.ts",
     "check": "cargo check --manifest-path src-tauri/Cargo.toml",
     "test": "cargo test --manifest-path src-tauri/Cargo.toml"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-app-boot": "workspace:*"
+    "@deepseek-ai/dsh-app-boot": "workspace:*",
+    "@tauri-apps/cli": "^2.11.5"
   }
 }

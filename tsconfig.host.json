@@ -156,6 +156,8 @@
     "apps/web/stress-tests/reasoning-chunks.stress.ts",
     "apps/cli/tests/**/*.ts",
     "apps/desktop-host/tests/**/*.ts",
+    "apps/tauri-desktop/scripts/**/*.ts",
+    "apps/tauri-desktop/tests/**/*.ts",
     "benchmarks/**/*.ts",
     "packages/*/*/tests/**/*.ts",
     "scripts/**/*.ts",

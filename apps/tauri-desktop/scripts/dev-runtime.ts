@@ -16,6 +16,19 @@ import {
 import { dirname, join } from 'node:path'
 import { initProfile, PROFILE_TEMPLATES } from '@deepseek-ai/dsh-app-boot'
 
+/**
+ * Resolve the profile bundles the desktop runtime initializes. Indexing the
+ * template record is unguarded by design; a missing web template is a boot
+ * package the shell cannot initialize and fails the run.
+ * @returns The web profile's bundle names in declaration order.
+ */
+export function resolveWebBundles(): readonly string[] {
+  if (PROFILE_TEMPLATES.web === undefined) {
+    throw new Error('tauri desktop runtime: @deepseek-ai/dsh-app-boot ships no "web" profile template')
+  }
+  return PROFILE_TEMPLATES.web.bundles
+}
+
 const DSH_PACKAGE = '@deepseek-ai/dsh'
 const DESKTOP_HOST_PACKAGE = '@deepseek-ai/dsh-desktop-host'
 const RUNTIME_PACKAGE_NAME = '@deepseek-ai/dsh-tauri-desktop-runtime'
@@ -66,7 +79,7 @@ export function prepareDevelopmentResources(options: DevelopmentResourcesOptions
     join(runtimeRoot, 'primary-runtime', 'office-skills'),
   )
   const home = join(options.resources, 'home')
-  initProfile(join(home, 'profiles', 'desktop'), PROFILE_TEMPLATES.web.bundles)
+  initProfile(join(home, 'profiles', 'desktop'), resolveWebBundles())
   return { resources: options.resources, home }
 }
 
@@ -107,7 +120,7 @@ function prepareRuntimeProject(options: {
       [DSH_PACKAGE]: cli.version,
       [DESKTOP_HOST_PACKAGE]: host.version,
     },
-    dsh: { profile: { bundles: [...PROFILE_TEMPLATES.web.bundles] } },
+    dsh: { profile: { bundles: [...resolveWebBundles()] } },
   }, undefined, 2)}\n`, { mode: 0o600 })
   writeFileSync(
     join(options.projectDir, 'pnpm-workspace.yaml'),

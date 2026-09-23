@@ -64,7 +64,7 @@ pnpm --dir apps/tauri-desktop run start        # skip the workspace build
 `scripts/dev.ts` builds the workspace, then `scripts/dev-runtime.ts` prepares the disposable resources under `.tauri-build/development/`:
 
 - `dsh/` — the runtime project whose `node_modules` links the built CLI (`@deepseek-ai/dsh`), the Desktop Host, and their `workspace:` dependencies, with a hoisted-linker pnpm workspace file, so the Host entry at `node_modules/@deepseek-ai/dsh-desktop-host/lib/index.js` resolves.
-- `runtime/bin/node` — the launcher's own Node executable, the process the shell spawns (production copies the packaged runtime here through the packaging flow).
+- `runtime/bin/node` — the launcher's own Node executable, the process the shell spawns.
 - `runtime/pnpm` + `runtime/primary-runtime/office-skills` — the package-manager entry and the Office skill assets the desktop Office plugin requires.
 - `home/` — a development Harness home; its `profiles/desktop` profile is initialized with the shared Web bundle template and never overwritten afterwards.
 
@@ -72,17 +72,57 @@ The launcher then builds the shell (`cargo build`) and start it with `DSH_TAURI_
 
 Host logs reach the console (stderr); application troubleshooting follows the same practices as the Web application.
 
+## Packaging
+
+```sh
+pnpm run build:desktop
+```
+
+`scripts/build.ts` verifies the release version is identical across the root and app manifests, the Cargo crate, and `tauri.conf.json`, runs the workspace build (`pnpm run build`), assembles the packaged resources under `.tauri-build/packaging/resources/`, and runs `tauri build` with the NSIS target:
+
+- `resources/dsh/` — the runtime project whose `node_modules` resolves the Host entry. Every workspace package in the CLI's and Desktop Host's runtime dependency closure is copied as a real, link-resolved directory — development uses junctions, packaging must never ship a reparse point that points back at the build host. External dependencies are placed once beside the packages they serve; a dependency name claimed by two versions nests beneath the consuming package.
+- `resources/runtime/bin/node(.exe)` — the build host's Node executable, the process the shell spawns.
+- `resources/runtime/pnpm/` — the workspace's pinned pnpm package, providing `bin/pnpm.mjs`.
+- `resources/runtime/primary-runtime/office-skills/` — the Office skill assets the desktop Office plugin requires.
+
+`tauri.conf.json` maps that tree onto the executable's `resources/` directory (`bundle.resources`), which is exactly where `main.rs` resolves node, the pnpm entry, and the primary runtime in packaged builds.
+
+## Signing
+
+Signing hangs off Tauri's custom sign command: `bundle.windows.signCommand` points at `scripts/windows-sign.mjs`. Without `DSH_WINDOWS_SIGN` set, the command leaves every artifact unsigned and says so in the build log, so local builds succeed un-signed. With `DSH_WINDOWS_SIGN` set, the command signs through `signtool` and then timestamps it (RFC 3161, SHA-256) using the SafeNet eToken contract:
+
+| Variable | Meaning |
+|---|---|
+| `DSH_WINDOWS_SIGN` | Presence (non-empty) enables signing. |
+| `DSH_WINDOWS_SIGNTOOL` | The SafeNet-compatible signtool executable. |
+| `DSH_WINDOWS_CER_FILE` | The public code-signing certificate file. |
+| `DSH_WINDOWS_KEY_CONTAINER` | The SafeNet private-key container name. |
+| `DSH_WINDOWS_TOKEN_PIN` | The SafeNet token password; never inherited by signtool or printed. |
+
+The Tauri bundler routes the shell binary, the NSIS plugin DLLs, the installer, and (at install time, through `!uninstfinalize`) the uninstaller through this one command; a signing failure aborts the build.
+
+## Installer migration
+
+`src-tauri/installer/hooks.nsh` hooks the NSIS `PREINSTALL` stage: when the retired Electron Desktop is still present under `%LOCALAPPDATA%\Programs\DeepSeek Harness`, the installer runs its `Uninstall.exe /S` synchronously, clears the leftover entry, and records the outcome in `installer-logs/migrate-electron.log` under the install directory. A failed migration is logged and never blocks the new installation; the Harness home stays untouched.
+
 ## Layout
 
 ```
-package.json        workspace package, scripts for dev and cargo checks
+package.json        workspace package, scripts for dev, build, and cargo checks
 scripts/
+  build.ts          production build: workspace build, resource assembly, tauri build
   dev.ts            development launcher: build, prepare, launch
   dev-runtime.ts    development resources and profile preparation
+  windows-sign.mjs  Tauri custom sign command (signtool, gated by DSH_WINDOWS_SIGN)
+tests/
+  installer-hooks.spec.ts    NSIS hook compilation against makensis
+  windows-sign.spec.ts       sign command argv contract against a fixture signtool
 src-tauri/
   Cargo.toml        shell crate (tauri 2, serde_json, windows-sys/libc)
   build.rs          tauri-build context
-  tauri.conf.json   identifier/productName/version; no window or updater config
+  tauri.conf.json   identifier/productName/version; NSIS target, resources map, sign command
+  installer/
+    hooks.nsh       NSIS installer hooks (retired Electron Desktop migration)
   icons/icon.ico    placeholder Windows resource icon
   src/
     main.rs         entry, configuration resolution, control loop, window
@@ -93,4 +133,4 @@ src-tauri/
 shell-dist/         static placeholder the window configuration requires
 ```
 
-`tauri.conf.json` carries no updater or signing configuration; packaging and signing follow the separate packaging-and-signing ticket (#6) and reuse the dsh release identity.
+`tauri.conf.json` carries no updater configuration; the updater follows the separate updater ticket. Signing reuses the dsh release identity through the documented `DSH_WINDOWS_*` environment.

@@ -1,0 +1,11 @@
+[package]
+name = "fake-signtool"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "fake-signtool"
+path = "src/main.rs"
+
+[workspace]

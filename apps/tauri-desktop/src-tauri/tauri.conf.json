@@ -11,5 +11,23 @@
     "security": {
       "csp": null
     }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "resources": {
+      "../.tauri-build/packaging/resources": "resources"
+    },
+    "windows": {
+      "signCommand": {
+        "cmd": "node",
+        "args": ["../scripts/windows-sign.mjs", "%1"]
+      },
+      "nsis": {
+        "installMode": "currentUser",
+        "installerHooks": "installer/hooks.nsh"
+      }
+    }
   }
 }
+
