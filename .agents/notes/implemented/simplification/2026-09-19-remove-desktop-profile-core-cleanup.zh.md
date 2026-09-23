@@ -32,7 +32,7 @@ profile 内的解析按[查找顺序 Note](../architecture/2026-09-19-profile-re
 
 ## Verification
 
-- [project-manager.spec.ts](../../../../apps/desktop/tests/project-manager.spec.ts) 断言一次启动准备后，profile 里已安装的核心包目录、第三方插件目录、manifest 声明、`desktop-runtime-state.json` 与锁文件逐字节不变。
+- **project-manager.spec.ts** (`apps/desktop/tests/project-manager.spec.ts`) 断言一次启动准备后，profile 里已安装的核心包目录、第三方插件目录、manifest 声明、`desktop-runtime-state.json` 与锁文件逐字节不变。
 - 仓库中不再有 `cleanProfileCorePackages`、`migrateDesktopProfileLinks`、`CLEAN_PROFILE_CORE_PACKAGES` 与 `DESKTOP_PROFILE_STATE` 的引用。
 
 ## Consequences

@@ -28,7 +28,7 @@ Office responses use Typert binary-result projection and Connection multipart fr
 
 The [kit ownership decision](2026-09-14-independent-libreoffice-kit.md) defines npm distribution and bundled offline conversion.
 
-Desktop installs the kit through its existing target-Node pnpm dependency installation and retains the complete dependency tree. Worker paths and executable permissions remain ordinary package files. The [Desktop build guide](../../../../apps/desktop/README.md) owns target selection and packaging; each signed application requires qualification on its target platform.
+Desktop installs the kit through its existing target-Node pnpm dependency installation and retains the complete dependency tree. Worker paths and executable permissions remain ordinary package files. The [Desktop build guide](../../../../docs/architecture.md) owns target selection and packaging; each signed application requires qualification on its target platform.
 
 The [Python executable distribution](2026-07-10-single-file-executable-sdk-runtime-distribution.md) keeps the kit, target engine, and their dependency closure beside the executable. Its installed-wheel smoke relocates the payload, requires exactly the target backend, and converts DOCX once through that engine. Platform packaging and publication constraints belong to the [platform engine decision](2026-09-15-platform-office-engines.md).
 

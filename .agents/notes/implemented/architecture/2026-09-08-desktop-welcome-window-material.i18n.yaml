@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-08-desktop-welcome-window-material.md
-2026-09-08-desktop-welcome-window-material.md: 4ee5f6d2934378b06754c4a8f134a4ca07a80840
-2026-09-08-desktop-welcome-window-material.zh.md: 1689af8481925c787c1d2412173fbd7d8c2f4b64
+2026-09-08-desktop-welcome-window-material.md: 258b96225e8c854491cc653a7bad232ea5f4a0d2
+2026-09-08-desktop-welcome-window-material.zh.md: 2a85e5b79f857be49953da957ae54d18f78a389f

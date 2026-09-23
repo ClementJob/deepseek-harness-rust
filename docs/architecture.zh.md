@@ -50,9 +50,9 @@ Python SDK 遵循相同的应用架构。其运行时 wheel 把普通 `dsh` CLI 
 
 ## 桌面应用
 
-[Electron 桌面应用](../apps/desktop/README.zh.md)在签名资源中携带精确匹配的 dsh 生产运行时，并拥有保留的 `$DSH_HOME/profiles/desktop`。共享 profile helper 初始化其文件、协调已安装 bundle，并解析安装与 bundle 的依赖而不替换 pnpm 拥有的包。CLI 与 Desktop 共享产品数据，可执行包、启用选择与锁文件保持独立。公开 CLI 不能管理 Desktop profile。
+[Tauri 桌面壳](../apps/tauri-desktop/README.zh.md)在捆绑资源中携带 dsh 生产运行时，并拥有保留的 `$DSH_HOME/profiles/desktop`。共享 profile helper 初始化其文件、协调已安装 bundle，并解析安装与 bundle 的依赖而不替换 pnpm 拥有的包。CLI 与 Desktop 共享产品数据，可执行包、启用选择与锁文件保持独立。公开 CLI 不能管理 Desktop profile。
 
-Electron 使用 Electron Node 模式启动私有 Desktop Host。Host 调用共享 CLI profile runner 与完整 Web 应用。窗口立即加载打包 Web 资源，等待启动注入后在同一文档中激活客户端插件。Web 负责 RPC 与流；桌面载体将本地页面连接到已认证的 Host。Node IPC 承载启动注入、就绪、致命错误与关闭。Desktop 默认端口为 `19387`，profile 配置可覆盖。壳拥有的 UI 通过内置 pnpm 执行插件事务，并遵循正常用户与 profile 配置。
+Tauri 壳以隐藏子进程启动私有 Desktop Host（Windows 上 `CREATE_NO_WINDOW` 并挂 kill-on-close Job Object）。Host 调用共享 CLI profile runner 与完整 Web 应用；就绪、致命错误、关闭与更新任务控制帧经 stdin/stdout 以 NDJSON 传输。窗口导航到 Host 的已认证 URL，由其直接服务打包 Web 资源与启动注入。Web 通过同源回环连接负责 RPC 与流。Desktop 默认端口为 `19387`，profile 配置可覆盖。壳拥有的 UI 通过内置 pnpm 执行插件事务，并遵循正常用户与 profile 配置。
 
 ## 核心包
 

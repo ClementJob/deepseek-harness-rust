@@ -28,7 +28,7 @@ Office 响应使用 Typert 二进制结果投影和 Connection multipart 封装�
 
 [kit 归属决策](2026-09-14-independent-libreoffice-kit.zh.md)定义 npm 分发和随应用打包的离线转换。
 
-Desktop 通过现有的目标 Node pnpm 依赖安装流程安装 kit，并保留完整依赖树。Worker 路径和可执行权限仍由普通包文件承载。[Desktop 构建指南](../../../../apps/desktop/README.zh.md) 负责目标选择与打包；每个签名应用仍需在目标平台验收。
+Desktop 通过现有的目标 Node pnpm 依赖安装流程安装 kit，并保留完整依赖树。Worker 路径和可执行权限仍由普通包文件承载。[Desktop 构建指南](../../../../docs/architecture.zh.md) 负责目标选择与打包；每个签名应用仍需在目标平台验收。
 
 [Python 可执行分发](2026-07-10-single-file-executable-sdk-runtime-distribution.zh.md)将 kit、目标引擎及其依赖闭包保留在可执行文件旁。安装后的 wheel 冒烟测试会迁移载荷，要求仅存在目标后端，并通过该引擎转换一次 DOCX。各平台的打包与发布限制由[平台引擎决策](2026-09-15-platform-office-engines.zh.md)说明。
 

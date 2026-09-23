@@ -14,13 +14,13 @@ Two more facts about a build were unrecoverable afterwards. A build handed to a 
 
 The version a build publishes is an argument. `--build-version` names it, `--build-version auto` proposes the next index for the day, and the value reaches electron-builder through `extraMetadata`, the update feed, and the upload validation as one input. Manifests keep the product version, so no packaging run modifies tracked files.
 
-The version rules in the [Desktop release rules](../../../../apps/desktop/README.md#release-versions) are unchanged: production publishes the dsh base, a prerelease base takes `.YYYYMMDD.index`, and a stable base takes `-test.YYYYMMDD.index`. Validation uses `semver` itself, because `electron-updater` compares feed versions with `semver.gt` against the installed `app.getVersion()`.
+The version rules in the [Desktop release rules](../../../../docs/architecture.md) are unchanged: production publishes the dsh base, a prerelease base takes `.YYYYMMDD.index`, and a stable base takes `-test.YYYYMMDD.index`. Validation uses `semver` itself, because `electron-updater` compares feed versions with `semver.gt` against the installed `app.getVersion()`.
 
 This supersedes two requirements of that note. Release-family manifests are no longer rewritten, and the shell version no longer equals the bundled runtime version: the runtime is the dsh package at the product version, and `verifyDesktopRuntime` receives the version whoever prepared that tree wrote, which installed-update qualification rewrites for its own materials. The application already reported the two separately to the mandatory update policy.
 
 Every artifact records `dshBuildCommit` and `dshBuildDirty` in its manifest. A production upload tags the packaged commit as `desktop-v<version>` after the artifacts are public, and reports the command to run by hand rather than failing an upload that already completed; a build from a modified checkout is not tagged. Test and local builds are deliberately left untagged, because a tag per test build would bury the releases.
 
-Upload reads the published version from the completion record packaging wrote, not from a variable, so [release fields still come only from the target file](../../../../apps/desktop/README.md#release-versions).
+Upload reads the published version from the completion record packaging wrote, not from a variable, so [release fields still come only from the target file](../../../../docs/architecture.md).
 
 ## Alternatives considered
 

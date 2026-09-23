@@ -12,7 +12,7 @@ The Desktop shell replaces Electron's default application menu with a custom tem
 
 On macOS the template declares `{ role: 'fileMenu' }` before the Edit menu and `{ role: 'windowMenu' }` after it, and a separator-delimited run of `hide`, `hideOthers`, and `unhide` before Quit in the application submenu. Those roles contribute only the standard items; no Services submenu, window list, or other macOS default is declared. Windows and Linux keep the application and Edit menus.
 
-Electron supplies English defaults for the File, Window, and Edit roles. Explicit labels override role defaults while retaining native actions and shortcuts; the localized application commands are documented in the [Desktop README](../../../../apps/desktop/README.md). No custom close, minimize, or hide code is added: ⌘W destroys the window through Electron's own role.
+Electron supplies English defaults for the File, Window, and Edit roles. Explicit labels override role defaults while retaining native actions and shortcuts; the localized application commands are documented in the **Desktop README** (`apps/desktop/README.md`). No custom close, minimize, or hide code is added: ⌘W destroys the window through Electron's own role.
 
 ## Alternatives considered
 

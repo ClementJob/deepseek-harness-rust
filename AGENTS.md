@@ -120,7 +120,7 @@ Before pushing, follow [dsh-pre-push-checks](.agents/skills/dsh-pre-push-checks/
 
 ## Secrets / .env
 
-Windows packaging/signing: [required reading](apps/desktop/README.md#windows-ev-signing).
+Windows packaging/signing: see [Desktop application](docs/architecture.md#desktop-application).
 
 Real-API tests/demos read `DEEPSEEK_API_KEY`, optional `DEEPSEEK_BASE_URL`, and root `.env`. cordis.yml allows `!!js` (never `!js`) under plugin `config` and entry `disabled`; other metadata stays literal, so conditional composition also uses overlays ([primer](docs/cordis-primer.md#loader-configuration)). Never commit credentials. CI e2e skips without a key; [testing.md](docs/testing.md) owns key policy.
 
@@ -176,6 +176,10 @@ Docs accompany every code change: update affected README and JSDoc contracts tog
 ## Editing these instructions
 
 `CLAUDE.md` symlinks `AGENTS.md` at root and `packages/`; edit the real file. Keep each rule self-contained while linking high-level docs. Condense when clarity survives; raise a `verify-doc-budgets` ceiling when the required content genuinely needs more space.
+
+## Agent skills
+
+所有回复必须使用中文（代码、命令、标识符除外）。Agent-skill configuration — issue tracker, triage labels, and domain-doc rules — lives in `docs/agents/`.
 
 ## Vendoring policy
 

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-09-19-remove-desktop-profile-core-cleanup.md
-2026-09-19-remove-desktop-profile-core-cleanup.md: a42100e8dc247611e29ddd2b8075b3b98e388177
-2026-09-19-remove-desktop-profile-core-cleanup.zh.md: 9a6be335a427e3f3083362ffd9e3aaa2f236635d
+2026-09-19-remove-desktop-profile-core-cleanup.md: 618fe210932542f39b88b7679c811a800e4bb148
+2026-09-19-remove-desktop-profile-core-cleanup.zh.md: d830002eb8dca1e15edfec3b32de06600352d8a7

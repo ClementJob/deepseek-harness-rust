@@ -32,7 +32,7 @@ Reintroduction conditions: a released Desktop wrote core-package copies into ext
 
 ## Verification
 
-- [project-manager.spec.ts](../../../../apps/desktop/tests/project-manager.spec.ts) asserts that after one launch preparation the installed core package directory, the third-party plugin directory, the manifest declarations, `desktop-runtime-state.json`, and the lockfile are byte-for-byte unchanged.
+- **project-manager.spec.ts** (`apps/desktop/tests/project-manager.spec.ts`) asserts that after one launch preparation the installed core package directory, the third-party plugin directory, the manifest declarations, `desktop-runtime-state.json`, and the lockfile are byte-for-byte unchanged.
 - The repository has no remaining references to `cleanProfileCorePackages`, `migrateDesktopProfileLinks`, `CLEAN_PROFILE_CORE_PACKAGES`, or `DESKTOP_PROFILE_STATE`.
 
 ## Consequences

@@ -14,13 +14,13 @@ Status: implemented
 
 构建发布的版本是一个参数。`--build-version` 指定它，`--build-version auto` 给出当天的下一个序号，该值经 `extraMetadata` 进入 electron-builder，并作为同一个输入贯穿更新 feed 与上传校验。清单保留产品版本，因此任何打包运行都不修改被跟踪的文件。
 
-[Desktop 发布规则](../../../../apps/desktop/README.zh.md#release-versions)中的版本规则不变：production 发布 dsh 基础版本，预发布基础版本追加 `.YYYYMMDD.index`，稳定基础版本追加 `-test.YYYYMMDD.index`。校验直接使用 `semver`，因为 `electron-updater` 就是用 `semver.gt` 把 feed 版本与已安装的 `app.getVersion()` 比较。
+[Desktop 发布规则](../../../../docs/architecture.zh.md)中的版本规则不变：production 发布 dsh 基础版本，预发布基础版本追加 `.YYYYMMDD.index`，稳定基础版本追加 `-test.YYYYMMDD.index`。校验直接使用 `semver`，因为 `electron-updater` 就是用 `semver.gt` 把 feed 版本与已安装的 `app.getVersion()` 比较。
 
 本决策取代上述 Note 的两条要求。发布家族清单不再被改写；外壳版本也不再等于内置运行时版本：内置运行时就是产品版本的 dsh 包，`verifyDesktopRuntime` 接收准备该运行时树的一方写入的版本，而安装升级验证会为自己的材料改写这个版本。应用本来就把两者分别上报给强制更新策略。
 
 所有产物的清单都记录 `dshBuildCommit` 与 `dshBuildDirty`。production 上传在产物公开后把打包所用 commit 打成 `desktop-v<版本>` 标签，失败时只打印需要手工执行的命令，而不让已完成的上传变成失败；来自有改动工作区的构建不打标签。test 与本地构建有意不留标签，因为为每个测试构建打标签会淹没真正的发布。
 
-上传从打包写下的完成记录中读取发布版本，而不是从变量读取，因此[发布字段仍然只来自目标文件](../../../../apps/desktop/README.zh.md#release-versions)。
+上传从打包写下的完成记录中读取发布版本，而不是从变量读取，因此[发布字段仍然只来自目标文件](../../../../docs/architecture.zh.md)。
 
 ## 考虑过的替代方案
 

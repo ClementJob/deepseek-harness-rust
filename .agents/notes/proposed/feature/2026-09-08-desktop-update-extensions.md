@@ -59,7 +59,7 @@ Use the already prepared target instead of delaying launch for a fresh package d
 
 ### Updater dependency qualification
 
-The initial dependency declaration remains in [Desktop package metadata](../../../../apps/desktop/package.json). A coordinated electron-builder 27 / electron-updater 7 migration is an evaluation candidate, not a dependency bump authorized here. The following API and platform items require verification against the selected release and real packages; this proposal does not claim they have been exercised locally.
+The initial dependency declaration remains in **Desktop package metadata** (`apps/desktop/package.json`). A coordinated electron-builder 27 / electron-updater 7 migration is an evaluation candidate, not a dependency bump authorized here. The following API and platform items require verification against the selected release and real packages; this proposal does not claim they have been exercised locally.
 
 | Candidate item | Required qualification |
 |---|---|
