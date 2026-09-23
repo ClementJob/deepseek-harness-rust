@@ -32,7 +32,6 @@ function harnessSource(hooksPath: string, outFile: string): string {
   return [
     '!include "LogicLib.nsh"',
     '!include "FileFunc.nsh"',
-    '!define PRODUCTNAME "DeepSeek Harness"',
     `!include "${hooksPath}"`,
     '!ifmacrodef NSIS_HOOK_PREINSTALL',
     '!else',
@@ -57,8 +56,11 @@ compileTest('compiles the installer hooks, including the PREINSTALL migration ho
     const result = spawnSync(makensis, ['-V2', '-INPUTCHARSET', 'UTF8', harnessPath], { encoding: 'utf8', timeout: 120_000 })
     expect(result.status).toBe(0)
     expect(result.stderr).toBe('')
-    // The old Electron installation directory convention the migration hook targets.
-    expect(readFileSync(HOOKS_PATH, 'utf8')).toContain('$LOCALAPPDATA\\Programs\\${PRODUCTNAME}')
+    // The old Electron installation directory convention the migration hook targets;
+    // the legacy name is fixed by the Electron release history, not PRODUCTNAME.
+    const hooks = readFileSync(HOOKS_PATH, 'utf8')
+    expect(hooks).toContain('!define DshLegacyProductName "DeepSeek Harness"')
+    expect(hooks).toContain('"$LOCALAPPDATA\\Programs\\${DshLegacyProductName}"')
   }
   finally {
     rmSync(scratch, { recursive: true, force: true })

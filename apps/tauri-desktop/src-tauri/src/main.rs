@@ -233,7 +233,7 @@ fn open_main_window(handle: &AppHandle, url: &str) -> Result<(), String> {
     handle
         .run_on_main_thread(move || {
             let window = WebviewWindowBuilder::new(&queued, "main", WebviewUrl::External(parsed))
-                .title("DeepSeek Harness")
+                .title("DSHR")
                 .inner_size(1280.0, 820.0)
                 .min_inner_size(520.0, 600.0);
             if let Err(error) = window.build() {

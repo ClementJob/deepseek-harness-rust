@@ -7,6 +7,10 @@
 ; application still running) is logged and never blocks the new installation.
 ; The old uninstaller preserves the Harness home by its own contract.
 
+; This product installs as DSHR, so the retired install's name cannot come from
+; PRODUCTNAME; the legacy directory is fixed by the Electron release history.
+!define DshLegacyProductName "DeepSeek Harness"
+
 Var DshMigrationDirectory
 Var DshMigrationUninstaller
 Var DshMigrationExitCode
@@ -49,7 +53,7 @@ Var DshMigrationLogFile
 ; own uninstaller removes its files and per-user registry entry synchronously
 ; (`_?=` keeps ExecWait synchronous), and leftovers are cleared best-effort.
 !macro NSIS_HOOK_PREINSTALL
-  StrCpy $DshMigrationDirectory "$LOCALAPPDATA\Programs\${PRODUCTNAME}"
+  StrCpy $DshMigrationDirectory "$LOCALAPPDATA\Programs\${DshLegacyProductName}"
   StrCpy $DshMigrationUninstaller "$DshMigrationDirectory\Uninstall.exe"
   ${If} ${FileExists} "$DshMigrationUninstaller"
     Push $R0
