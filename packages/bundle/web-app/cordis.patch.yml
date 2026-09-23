@@ -172,7 +172,7 @@
       inject: [webStartup]
       config:
         openBrowser: !!js ctx.webStartup.openBrowser
-        printUrl: true
+        printUrl: !!js ctx.webStartup.printUrl ?? true
         surfaceContext: true
         trustedHosts: !!js ctx.webStartup.trustedHosts
 

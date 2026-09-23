@@ -23,6 +23,8 @@ export const WEB_STARTUP_SERVICE = 'webStartup'
 export interface WebStartupValues {
   /** Whether this invocation opens the default browser after startup. */
   openBrowser: boolean
+  /** Whether this invocation prints the `dsh web:` URL line; embedded supervisors learn the URL through their own channel. */
+  printUrl: boolean
   /** `--host`, absent when the invocation did not name one. */
   host?: string
   /** `--port`, absent when the invocation did not name one. */
@@ -35,6 +37,7 @@ export interface WebStartupValues {
 interface WebOptions {
   host?: string
   open: boolean
+  printUrl: boolean
   port?: string
   trustedHost?: string[]
 }
@@ -50,6 +53,7 @@ function webCommand(): Command {
     .helpOption('-h, --help', 'show this help')
     .option('--host <host>', 'bind host')
     .option('--no-open', 'do not open the Web UI in the default browser')
+    .option('--no-print-url', 'do not print the `dsh web:` URL line; for embedded supervisors that learn the URL through their own channel')
     .option('--port <port>', 'listen port; pass 0 to let the OS pick a free one')
     .option('--trusted-host <authority...>', 'extra authority the /api browser-trust fence accepts (host or host:port; repeatable)')
     .addHelpText('after', `
@@ -79,6 +83,7 @@ export function apply(ctx: Context): void {
     }
     ctx.provide(WEB_STARTUP_SERVICE, {
       openBrowser: options.open,
+      printUrl: options.printUrl,
       ...options.host !== undefined && { host: options.host },
       ...options.port !== undefined && { port: Number(options.port) },
       trustedHosts: options.trustedHost ?? [],
